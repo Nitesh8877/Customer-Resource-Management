@@ -1,0 +1,20 @@
+{
+  "name": "crm",
+  "version": "1.0.0",
+  "description": "This is my customer resource management app",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Er Nitesh",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.0",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.8.0",
+    "nodemon": "^2.0.20"
+  }
+}
