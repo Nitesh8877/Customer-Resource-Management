@@ -5,9 +5,9 @@ const EmailTransporter = require("../notifier/emailService")
 
 cron.schedule('*/30 * * * * *', async () => {
     const notifications = await TicketNotificationModel.find({
-        sentStatus: "UN_SENT"
+        sendStatus:"UN_SENT"
     })
-
+    console.log(notifications)
     console.log(`Count of unsent notification: ${notifications.length}`)
 
     notifications.forEach(notification => {
@@ -24,8 +24,7 @@ cron.schedule('*/30 * * * * *', async () => {
                 console.log(err.message)
             } else {
                 console.log(info)
-                const savedNotification = await TicketNotificationModel
-                    .findOne({ _id: notification._id })
+                const savedNotification = await TicketNotificationModel.findOne({ _id: notification._id })
                 savedNotification.sendStatus="SEND"
                 await savedNotification.save()
             }

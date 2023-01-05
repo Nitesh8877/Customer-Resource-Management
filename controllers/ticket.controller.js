@@ -2,6 +2,7 @@ const User = require("../models/user.model")
 const Ticket = require("../models/ticket.model")
 const constants = require("../utils/constants")
 const objectConverter = require("../utils/objectConverter")
+const sendEmail=require("../utils/NotificationClient");
 
 exports.createTicket = async (req, res) => {
     const ticketObject = {
@@ -32,6 +33,13 @@ exports.createTicket = async (req, res) => {
 
             engineer.ticketsAssigned.push(ticket._id)
             await engineer.save()
+            
+            sendEmail(ticket._id,
+                `Ticket with id: ${ticket._id} created`,
+                ticket.description,
+                user.email+","+engineer.email,
+                user.email
+                )
 
             res.status(201).send(objectConverter.ticketResponse(ticket))
         }
@@ -52,9 +60,13 @@ exports.updateTicket = async (req, res) => {
     const ticket = await Ticket.findOne({
         _id: req.params.id
     })
+
+
     const saveUser = await User.findOne({
         userId: req.body.userId
     })
+
+    
 
     if (canUpdate(saveUser, ticket)) {
         ticket.title = req.body.title != undefined
@@ -68,6 +80,21 @@ exports.updateTicket = async (req, res) => {
         ticket.assignee=req.body.assignee!=undefined
         ?req.body.assignee:ticket.assignee
         await ticket.save()
+
+        const engineer=await User.findOne({
+            userId:ticket.assignee
+        })
+        const requester=await User.findOne({
+            userId:ticket.reporter
+        }) 
+        console.log("all emails--------->", saveUser.email,engineer.email,requester.email);
+        sendEmail(ticket._id,
+           ` Ticket with id: ${ticket._id} updated`,
+           ticket.description,
+           saveUser.email+","+engineer.email+","+requester.email,
+           saveUser.email
+            )
+
         res.status(200).send(objectConverter.ticketResponse(ticket));
     }else{
         res.status(401).send({
