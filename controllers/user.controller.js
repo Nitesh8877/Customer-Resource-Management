@@ -134,18 +134,19 @@ exports.findById=async(req,res)=>{
         user=await User.find({
             userId:userIdReq
         })
-    } catch (error) {
-        res.status(500).send({
-            message:"Some internal error occured ! find by id side"
-        })
-    }
-    if(user.length>0){
+        if(user.length>0){
             res.status(200).send(ObjectConverter.userResponse(user));
     }else{
         res.status(200).send({
             message:`User with this id [${userIdReq}] is not present`
         })
     }
+    } catch (error) {
+        res.status(500).send({
+            message:"Some internal error occured ! find by id side"
+        })
+    }
+    
 }
 
 

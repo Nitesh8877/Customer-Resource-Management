@@ -41,7 +41,11 @@ exports.getNotificationStatus=async(req,res)=>{
         const notification=await TicketNotificationModel.findOne({
             ticketId:reqId
         })
-       
+       if(!notification){
+        res.status(401).send({
+            message:"Ticket id not found"
+        })
+       }
         res.status(200).send({
             requestId:notification.ticketId,
             subject:notification.subject,

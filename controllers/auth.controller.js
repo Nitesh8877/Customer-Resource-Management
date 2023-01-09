@@ -28,11 +28,8 @@ exports.signup = async (req, res) => {
             name:userCreated.name,
             userId:userCreated.userId,
             email:userCreated.email,
-            password:userCreated.password,
-            userType:userCreated.userType,
-            userStatus:userCreated.userStatus,
-            createdAt:userCreated.createdAt,
-            updateAt:userCreated.updateAt
+            userTypes:userCreated.userType,
+            userStatus:userCreated.userStatus
         }
         res.status(201).send(postResponse);
         
@@ -75,16 +72,21 @@ exports.signin=async(req,res)=>{
     let token=jwt.sign({userId:user.userId},config.secret,{
         expiresIn:86400//24 hours
     })
-    let data={
+    // let data={
+    //     name:user.name,
+    //     userId:user.userId,
+    //     email:user.email,
+    //     userTypes:user.userType,
+    //     userStatus:user.userStatus,
+    //     accessToken:token
+    // }
+    // console.log(data)
+    res.status(200).send({
         name:user.name,
         userId:user.userId,
         email:user.email,
         userTypes:user.userType,
         userStatus:user.userStatus,
         accessToken:token
-    }
-    console.log(data)
-    res.status(200).send({
-       data
     })
 }
