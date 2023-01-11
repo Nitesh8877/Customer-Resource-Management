@@ -15,12 +15,13 @@ const fetchByName=async(userNameReq,res)=>{
         users=await User.find({
             name:userNameReq
         });
+        return users;
      } catch (error) {
         res.status(500).send({
-            message:"Some internal error occured! name"
+            message:"Some internal error occured"
         })
      }
-     return users;
+     
 }
 /** 
  * Fetch all the data in database
@@ -29,12 +30,13 @@ const fetchAll=async(res)=>{
     let users
     try {
         users=await User.find()
+        return users;
     } catch (error) {
         res.status(500).send({
-            message:"Some internal error occured! Fetch All Data"
+            message:"Some internal error occured"
         })
     }
-    return users;
+   
 }
 /** 
  * Fetch all the data by type of status and which type of data like admin,engineer,student
@@ -48,13 +50,14 @@ const fetchByTypeAndStatus= async(userTypeReq,userStatusReq,res)=>{
             userType:userTypeReq,
             userStatus:userStatusReq
         })
+        return users;
         
     } catch (error) {
         res.status(500).send({
-            message:"Some interanal error occured in user status and type"
+            message:"Some internal error occured"
         })
     }
-    return users;
+    
 }
 
 /** 
@@ -67,13 +70,14 @@ const fetchByType=async(userTypeReq,res)=>{
         user=await User.find({
             userType:userTypeReq
         })
+        return user;
         
     } catch (error) {
         res.status(500).send({
-            message:"Some internal error in type of data "
+            message:"Some internal error occured"
         })
     }
-    return user;
+
 
 }
 
@@ -86,13 +90,13 @@ const fetchByStatus=async(userStatusReq,res)=>{
         users=await User.find({
             userStatus:userStatusReq
         })
-        
+        return users;
     } catch (error) {
         res.status(500).send({
-            message:"Some internal error occured in status type of users"
+            message:"Some internal error occured"
         })
     }
-    return users;
+    
 }
 
 /**
@@ -116,8 +120,9 @@ exports.findAll=async (req,res)=>{
    }else{
     users=await fetchAll(res);
    }
-res.status(200).send(ObjectConverter.userResponse(users));
-   
+   if(users){
+    res.status(200).send(ObjectConverter.userResponse(users));
+   }
 }
 
 

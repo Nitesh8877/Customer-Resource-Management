@@ -1,8 +1,8 @@
-const {mockRequest,mockResponse}=require('./intercepter');
-const {signup,signin}=require("../controllers/auth.controller");
-const User=require("../models/user.model");
+const {mockRequest,mockResponse}=require('../intercepter');
+const {signup,signin}=require("../../controllers/auth.controller");
+const User=require("../../models/user.model");
 const bcrypt=require("bcryptjs");
-const db=require("./db");
+const db=require("../db");
 const {jsonWebTokenError}=require("jsonwebtoken");
 
 beforeAll(async()=>await db.connect())

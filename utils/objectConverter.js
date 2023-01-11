@@ -26,3 +26,10 @@ exports.ticketResponse=(ticket)=>{
         updateAt:ticket.updateAt
     }
 }
+
+exports.ticketListResponse = (tickets) => {
+    let ticketResult = []
+    tickets.forEach(ticket => { return ticketResult.push(exports.ticketResponse(ticket)) }
+    )
+    return ticketResult
+}

@@ -28,7 +28,6 @@ exports.closeDatabase=async()=>{
 exports.clearDataBase=async()=>{
     const collections=await mongoose.connection.collections
     for(const name in collections){
-        console.log(name);
         const collection=collections[name];
         await collection.deleteMany();
     }

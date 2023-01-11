@@ -12,15 +12,13 @@ exports.createTicket = async (req, res) => {
         status: req.body.status,
         reporter: req.body.userId,
     }
-    console.log('ticket', ticketObject)
+   
     const engineer = await User.findOne({
         userType: constants.userTypes.engineer,
         userStatus: constants.userStatus.approved
     })
 
     ticketObject.assignee = engineer.userId
-    console.log('ticket', ticketObject)
-    console.log("engineer", engineer)
     try {
         const ticket = await Ticket.create(ticketObject)
 
@@ -40,11 +38,9 @@ exports.createTicket = async (req, res) => {
                 user.email+","+engineer.email,
                 user.email
                 )
-
             res.status(201).send(objectConverter.ticketResponse(ticket))
         }
     } catch (err) {
-        console.log("Some error happened while creating ticket", err.message)
         res.status(500).send({
             message: 'Some internal server error'
         })
@@ -87,7 +83,6 @@ exports.updateTicket = async (req, res) => {
         const requester=await User.findOne({
             userId:ticket.reporter
         }) 
-        console.log("all emails--------->", saveUser.email,engineer.email,requester.email);
         sendEmail(ticket._id,
            ` Ticket with id: ${ticket._id} updated`,
            ticket.description,
@@ -106,27 +101,29 @@ exports.updateTicket = async (req, res) => {
 
 
 
-exports.getAllTickets = async (req, res) => { 
+exports.getAllTickets = async (req, res) => {
+    /**
+     * Use cases:
+     *  - ADMIN : should get the list of all the tickets
+     *  - CUSTOMER : should get all the tickets created by him/her
+     *  - ENGINEER : should get all the tickets assigned to him/her
+     */
+    const queryObj = {}
 
-    let ticket
-    try {
-        ticket=await Ticket.find();
-        console.log(ticket)
-        if(ticket){
-        res.status(200).send(ticket);
-        }else{
-            res.status(401).send({
-                message:"No Ticket Available!"
-            })
-          
-        }
-    } catch (error) {
-        res.status(500).send({
-            message:"Some internal error occured! Get all tickets"
-        })
+    if (req.query.status != undefined) {
+        queryObj.status = req.query.status
     }
 
-
+    const savedUser = await User.findOne({ userId: req.body.userId })
+    if (savedUser.userType == constants.userTypes.admin) {
+        // Do anything
+    } else if (savedUser.userType == constants.userTypes.customer) {
+        queryObj.reporter = savedUser.userId
+    } else {
+        queryObj.assignee = savedUser.userId
+    }
+    const tickets = await Ticket.find(queryObj)
+    res.status(200).send(objectConverter.ticketListResponse(tickets))
 }
 
 /**
@@ -140,4 +137,66 @@ exports.getOneTicket = async (req, res) => {
     })
     res.status(200).send(objectConverter.ticketResponse(ticket));
     
+}
+
+const canUpdateByEngineer = (user, ticket) => {
+    return user.userId == ticket.assignee
+}
+
+/**
+ * Update ticket assigne by enginner
+ */
+exports.updateTicketAssignedByEngineer = async (req, res) => {
+    const ticket = await Ticket.findOne({
+        _id: req.params.id
+    })
+    const saveUser = await User.findOne({
+        userId: req.body.userId
+    })
+
+    if (canUpdateByEngineer(saveUser, ticket)) {
+        ticket.title = req.body.title != undefined
+            ? req.body.title : ticket.title
+        ticket.description = req.body.description != undefined
+            ? req.body.description : ticket.description
+        ticket.ticketPriority = req.body.ticketPriority != undefined
+            ? req.body.ticketPriority : ticket.ticketPriority
+        ticket.status=req.body.status!=undefined
+        ?req.body.status:ticket.status
+        ticket.assignee=req.body.assignee!=undefined
+        ?req.body.assignee:ticket.assignee
+        await ticket.save()
+        res.status(200).send(objectConverter.ticketResponse(ticket));
+    }else{
+        res.status(401).send({
+            message:"You are not assigned this ticket"
+        })
+    }
+
+}
+
+/**
+ * Get all tickets filter based on ticketPriority
+ */
+
+exports.ticketPriority=async(req,res)=>{
+
+    let ticket
+    try {
+        ticket =await Ticket.find();
+        if(ticket){
+            ticket.sort((a,b)=>a.ticketPriority-b.ticketPriority);
+            res.status(200).send(ticket);
+        }else{
+            res.status(200).send({
+                message:"Ticket are not available"
+            })
+        }
+    } catch (error) {
+        
+        res.status(500).send({
+            message:"Some internal error occured"
+        })
+    }
+
 }

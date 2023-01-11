@@ -9,5 +9,9 @@ module.exports= function(app){
 
     app.get("/crm/api/tickets",[authJwt.verifyToken],ticketController.getAllTickets);
 
-    app.get("/crm/api/tickets/:id",[authJwt.verifyToken],ticketController.getOneTicket)
+    app.get("/crm/api/tickets/:id",[authJwt.verifyToken],ticketController.getOneTicket);
+
+    app.put('/crm/api/ticket/:id',ticketController.updateTicketAssignedByEngineer);
+
+    app.get('/crm/api/priorityTicket',ticketController.ticketPriority)
 }

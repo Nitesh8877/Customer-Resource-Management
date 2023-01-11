@@ -13,7 +13,6 @@ exports.signup = async (req, res) => {
     } else {
         userStatus = constants.userStatus.approved
     }
-    console.log(req);
     const userObj={
         name:req.body.name,
         userId:req.body.userId,
@@ -34,7 +33,6 @@ exports.signup = async (req, res) => {
         res.status(201).send(postResponse);
         
     } catch (error) {
-        console.log("something went wrong while saving to db",error.message);
         res.status(500).send({
             message:"some internal error while inserting the element"
         })

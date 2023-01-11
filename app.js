@@ -47,6 +47,4 @@ userRouter(app);
 const ticketRouter=require("./routes/ticket.routes");
 ticketRouter(app);
 
-app.listen(8080,()=>{
-    console.log("server is started port number: 8080");
-})
+module.exports= app.listen(3000,()=>console.log("server is started port number: 3000"))
