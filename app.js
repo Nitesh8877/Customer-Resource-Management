@@ -42,16 +42,13 @@ async function init() {
 // })
 console.log("before mongodb connect");
 mongoose.set('strictQuery', true);
-mongoose.connect(dbConfig.DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+mongoose.connect(dbConfig.DB_URL)
   .then(() => {
     console.log("DB Connetion Successfull");
         init();
   })
   .catch((err) => {
-    console.log(err.message);
+    console.log(err, "something went wrong in mongodb connection");
   });
 console.log("After mongodb connected")
 const AuthRouter=require('./routes/auth.route');
