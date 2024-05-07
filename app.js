@@ -40,6 +40,7 @@ async function init() {
 //     console.log("Connected to mongo DB");
 //     init();
 // })
+console.log("before mongodb connect");
 mongoose.set('strictQuery', true);
 mongoose.connect(dbConfig.DB_URL, {
     useNewUrlParser: true,
@@ -52,7 +53,7 @@ mongoose.connect(dbConfig.DB_URL, {
   .catch((err) => {
     console.log(err.message);
   });
-
+console.log("After mongodb connected")
 const AuthRouter=require('./routes/auth.route');
 AuthRouter(app);
 const userRouter=require('./routes/user.route');
