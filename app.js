@@ -40,7 +40,7 @@ async function init() {
 //     console.log("Connected to mongo DB");
 //     init();
 // })
-
+mongoose.set('strictQuery', true);
 mongoose.connect(dbConfig.DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
