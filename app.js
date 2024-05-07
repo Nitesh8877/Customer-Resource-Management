@@ -30,16 +30,28 @@ async function init() {
     }
 }
 
+ app.use(express.json());
+// mongoose.connect(dbConfig.DB_URL);
+// app.use(express.json());
+// const db=mongoose.connection
+// db.on("error",()=>console.log("Can't connect to DB"));
+// db.once("open",()=>
+// {
+//     console.log("Connected to mongo DB");
+//     init();
+// })
 
-mongoose.connect(dbConfig.DB_URL);
-app.use(express.json());
-const db=mongoose.connection
-db.on("error",()=>console.log("Can't connect to DB"));
-db.once("open",()=>
-{
-    console.log("Connected to mongo DB");
-    init();
-})
+mongoose.connect(dbConfig.DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("DB Connetion Successfull");
+        init();
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
 
 const AuthRouter=require('./routes/auth.route');
 AuthRouter(app);
