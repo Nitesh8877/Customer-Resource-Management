@@ -6,6 +6,7 @@ const app=express();
 const constants=require("./utils/constants");
 const User=require('./models/user.model');
 const bcrypt=require("bcryptjs");
+mongoose.set('strictQuery', false);
 async function init() {
     let user = await User.findOne({ userId: "admin" })
 
