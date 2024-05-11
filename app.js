@@ -40,17 +40,27 @@ async function init() {
 //     console.log("Connected to mongo DB");
 //     init();
 // })
-console.log("before mongodb connect");
-mongoose.set('strictQuery', true);
-mongoose.connect(dbConfig.DB_URL)
-  .then(() => {
-    console.log("DB Connetion Successfull");
-        init();
-  })
-  .catch((err) => {
-    console.log(err, "something went wrong in mongodb connection");
-  });
-console.log("After mongodb connected")
+// console.log("before mongodb connect");
+// mongoose.set('strictQuery', true);
+// mongoose.connect(dbConfig.DB_URL)
+//   .then(() => {
+//     console.log("DB Connetion Successfull");
+//         init();
+//   })
+//   .catch((err) => {
+//     console.log(err, "something went wrong in mongodb connection");
+//   });
+// console.log("After mongodb connected")
+
+mongoose.connect(dbConfig.DB_URL);
+const db=mongoose.connection
+db.on("error",()=>console.log("Can't connect to DB"));
+db.once("open",()=>
+{
+    console.log("Connected to mongo DB");
+     init();
+
+})
 const AuthRouter=require('./routes/auth.route');
 AuthRouter(app);
 const userRouter=require('./routes/user.route');
