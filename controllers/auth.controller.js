@@ -33,8 +33,9 @@ exports.signup = async (req, res) => {
         res.status(201).send(postResponse);
         
     } catch (error) {
+        console.log(error);
         res.status(500).send({
-            message:"some internal error while inserting the element"
+            message:"some internal error while inserting the element"+error
         })
     }
 
