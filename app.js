@@ -51,7 +51,7 @@ async function init() {
 //     console.log(err, "something went wrong in mongodb connection");
 //   });
 // console.log("After mongodb connected")
-
+console.log("data");
 mongoose.connect(dbConfig.DB_URL);
 const db=mongoose.connection
 db.on("error",()=>console.log("Can't connect to DB"));
