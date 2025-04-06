@@ -6,6 +6,9 @@ const app=express();
 const constants=require("./utils/constants");
 const User=require('./models/user.model');
 const bcrypt=require("bcryptjs");
+const cors=require('cors')
+
+
 
 async function init() {
     let user = await User.findOne({ userId: "admin" })
@@ -31,6 +34,7 @@ async function init() {
 }
 
  app.use(express.json());
+app.use(cors())
 // mongoose.connect(dbConfig.DB_URL);
 // app.use(express.json());
 // const db=mongoose.connection
